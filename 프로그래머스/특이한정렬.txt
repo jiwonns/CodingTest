@@ -1,4 +1,3 @@
-
 import java.util.Arrays;
 
 class Solution {
@@ -28,4 +27,3 @@ public static int[] solution(int[] numlist, Integer n) {
         return numlist;
     }
 }
-
