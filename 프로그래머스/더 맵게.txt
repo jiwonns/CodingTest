@@ -1,0 +1,63 @@
+import java.util.Collections;
+import java.util.PriorityQueue;
+
+class Solution {
+    public static int solution(int[] scoville, int K) {
+        int answer = 0;
+        PriorityQueue<Integer> pq = new PriorityQueue<>();
+
+        for (int j : scoville) {
+            pq.add(j);
+        }
+
+        while(!pq.isEmpty()) {
+            // 가장 맵지 않은 스코빌
+            int scob = pq.peek();
+            if(scob >= K){
+                break;
+            }
+            pq.poll();
+            // 가장 맵지 않은 두 번째 스코빌
+            if(!pq.isEmpty()) {
+                pq.add(scob + pq.poll() * 2);
+                answer++;
+            }
+        }
+
+        if(pq.isEmpty() || pq.poll() < K){
+            return -1;
+        }
+        return answer;
+    }
+}mport java.util.Collections;
+import java.util.PriorityQueue;
+
+class Solution {
+    public static int solution(int[] scoville, int K) {
+        int answer = 0;
+        PriorityQueue<Integer> pq = new PriorityQueue<>();
+
+        for (int j : scoville) {
+            pq.add(j);
+        }
+
+        while(!pq.isEmpty()) {
+            // 가장 맵지 않은 스코빌
+            int scob = pq.peek();
+            if(scob >= K){
+                break;
+            }
+            pq.poll();
+            // 가장 맵지 않은 두 번째 스코빌
+            if(!pq.isEmpty()) {
+                pq.add(scob + pq.poll() * 2);
+                answer++;
+            }
+        }
+
+        if(pq.isEmpty() || pq.poll() < K){
+            return -1;
+        }
+        return answer;
+    }
+}
