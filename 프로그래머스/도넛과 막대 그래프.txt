@@ -1,12 +1,11 @@
 import java.util.LinkedList;
+import java.util.List;
 
 class Solution {
     private static LinkedList<Integer>[] graph;
     private static int[] incomingEdges;
-
     static int[] answer = new int[4];
 
-    static boolean[] visited;
     public static int[] solution(int[][] edges) {
         int len = 0;
         for (int[] edge : edges) {
@@ -16,7 +15,6 @@ class Solution {
 
         incomingEdges = new int[len + 1];
         graph = new LinkedList[len + 1];
-        visited = new boolean[len + 1];
         // 그래프 초기화
         initGraph(edges);
 
@@ -26,9 +24,10 @@ class Solution {
         // 그래프의 사이즈 (이후에 2개의 그래프만 구해 전체에서 빼기 위해)
         int graphSize = graph[root].size();
 
-        for (int i = 0; i < graph[root].size(); i++) {
-            incomingEdges[graph[root].get(i)]--;
-            findNode(graph[root].get(i));
+        List<Integer> children = graph[root];
+        for (int cur : children) {
+            incomingEdges[cur]--;
+            findNode(cur, cur);
         }
 
         answer[1] = graphSize - answer[3] - answer[2];
@@ -63,18 +62,20 @@ class Solution {
     // 막대 그래프는 마지막에 나가는 간선이 없음
     // 잘라낸 그래프
     // 11 2 8 재귀 탐색
-    private static void findNode(int node) {
-        visited[node] = true;
+    private static void findNode(int node, int vis) {
+        int cur = 0;
         if (graph[node].isEmpty()) {
             answer[2]++;
             return;
-        } else if (graph[graph[node].get(0)].size() == 2 && incomingEdges[graph[node].get(0)] == 2) {
-            answer[3]++;
-            return;
-        }else if(visited[graph[node].get(0)]){
-            return;
+        } else {
+            cur = graph[node].get(0);
+            if (graph[cur].size() == 2 && incomingEdges[cur] == 2) {
+                answer[3]++;
+                return;
+            } else if (vis == cur) {
+                return;
+            }
         }
-        findNode(graph[node].get(0));
+        findNode(cur, vis);
     }
-
 }
