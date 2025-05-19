@@ -1,0 +1,62 @@
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.PriorityQueue;
+
+class Solution {
+    public static int[] solution(String[] operations) {
+        int[] answer = new int[2];
+        PriorityQueue<Integer> minpq = new PriorityQueue<>(); // 최소값
+        PriorityQueue<Integer> maxpq = new PriorityQueue<>(Collections.reverseOrder()); // 최대값
+        HashMap<Integer, Integer> hm = new HashMap<>(); // 존재 값
+
+        for (String operation : operations) {
+            String[] sarr = operation.split(" ");
+            int num = Integer.parseInt(sarr[1]);
+            // Input
+            if (sarr[0].equals("I")) {
+                maxpq.offer(num);
+                minpq.offer(num);
+                hm.put(num, hm.getOrDefault(num, 0) + 1);
+            }
+            // Output
+            else {
+                // 최대값
+                int p = 0;
+                if (num == 1) {
+                    while (!maxpq.isEmpty()) {
+                        p = maxpq.poll();
+                        if (hm.containsKey(p)) {
+                            hm.put(p, hm.get(p) - 1);
+                            if (hm.get(p) == 0) hm.remove(p);
+                            break;
+                        }
+                    }
+                }
+                // 최솟값
+                else {
+                    while(!minpq.isEmpty()) {
+                        p = minpq.poll();
+                        if (hm.containsKey(p)) {
+                            hm.put(p, hm.get(p) - 1);
+                            if (hm.get(p) == 0) hm.remove(p);
+                            break;
+                        }
+                    }
+                }
+                if (minpq.size() == 1 && maxpq.size() == 1) {
+                    minpq.poll();
+                    maxpq.poll();
+                }
+            }
+        }
+
+        while (!maxpq.isEmpty() && !hm.containsKey(maxpq.peek())) {
+            maxpq.poll();
+        }
+        while (!minpq.isEmpty() && !hm.containsKey(minpq.peek())) {
+            minpq.poll();
+        }
+        if (hm.isEmpty()) return new int[]{0, 0};
+        return new int[]{maxpq.peek(), minpq.peek()};
+    }
+}
