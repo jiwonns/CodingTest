@@ -1,0 +1,93 @@
+import java.util.Arrays;
+import java.util.HashSet;
+
+class Solution {
+    public static void main(String[] args) {
+        solution(6, 6, new String[]{"TTTANT", "RRFACC", "RRRFCC", "TRRRAA", "TTMMMF", "TMMTTJ"});
+    }
+
+    static class Pos {
+        int x;
+        int y;
+
+        Pos(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+    }
+
+    static char[][] bd;
+
+    public static int solution(int m, int n, String[] board) {
+        int answer = 0;
+        HashSet<Pos> set = new HashSet();
+        bd = new char[m][n];
+        char[][] copy = new char[m][n];
+        for (int i = 0; i < m; i++) {
+            bd[i] = board[i].toCharArray();
+        }
+
+        int cnt = 0;
+        do {
+            cnt = 0;
+            set.clear();
+            // 유효한 점들 넣기
+            for (int i = 0; i < m - 1; i++) {
+                for (int j = 0; j < n - 1; j++) {
+                    char tc = bd[i][j];
+                    if (tc != '1' && tc == bd[i + 1][j] && tc == bd[i][j + 1] && tc == bd[i + 1][j + 1]) {
+                        set.add(new Pos(i, j));
+                        set.add(new Pos(i + 1, j));
+                        set.add(new Pos(i, j + 1));
+                        set.add(new Pos(i + 1, j + 1));
+                    }
+                }
+            }
+            // 점들 갱신
+            for (Pos p : set) {
+                if (p.x < bd.length && bd[p.x][p.y] != '0') {
+                    bd[p.x][p.y] = '0';
+                    cnt++;
+                }
+            }
+
+            for (char[] ch : bd) {
+                System.out.println(Arrays.toString(ch));
+            }
+            System.out.println();
+
+            // 빈 공간 채우기
+            // 순서대로 채우면 나중에 빈 공간이 생기는 경우 발생, 완탐 써야할 것 같음
+            for (int i = 0; i < m; i++) {
+                for (int j = 0; j < n; j++) {
+                    if (i < m - 1 && bd[i + 1][j] == '0') {
+                        findPos(i, j);
+                    }
+                }
+            }
+            for (char[] ch : bd) {
+                System.out.println(Arrays.toString(ch));
+            }
+            System.out.println();
+
+            for (int i = 0; i < bd.length; i++) {
+                bd[i] = new String(bd[i].clone()).replace('0', '1').toCharArray();
+            }
+
+            answer += cnt;
+        } while (cnt != 0);
+
+        return answer;
+    }
+
+    private static void findPos(int i, int j) {
+        int[] di = {1, -1};
+        for (int k = i; k < 2; k++) {
+            int mi = i + di[k];
+            if (mi >= 0 && mi < bd.length && bd[mi][j] == '0') {
+                bd[mi][j] = bd[i][j];
+                bd[mi][j] = '0';
+            }
+        }
+    }
+}
